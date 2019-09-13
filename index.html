@@ -1,0 +1,282 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Android Custom Controls and Canvas</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="reveal.js/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+		<link rel="stylesheet" href="reveal.js/lib/css/zenburn-nohighlight.css">
+
+		<!-- FontAwesome http://fontawesome.io/examples/ and http://fontawesome.io/icons/ -->
+		<link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+
+		<style>
+			.reveal h1,
+			.reveal h2 {
+				text-transform: none !important;
+				font-variant-caps: small-caps !important;
+			}
+			.reveal .small-column-left {
+				float: left;
+				width: 30%;
+			}
+			.reveal .big-column-right {
+				float: left;
+				width: 58%;
+				padding-left: 5% !important;
+			}
+			.reveal .big-column-left {
+				float: left;
+				width: 68%;
+			}
+			.reveal .small-column-right {
+				float: left;
+				width: 20%;
+				padding-left: 5% !important;
+				text-align: left;
+			}
+			.reveal .left {
+				text-align: left;
+				width: 90%;
+			}
+			.reveal .join-with-previous {
+				margin-top: -0.8em;
+			}
+		</style>
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<!-- Introduction -->
+
+				<section style="font-size: 0.8em">
+					<h1>Android Custom Controls and Canvas</h1>
+					<p>Xavier Rubio Jansana</p>
+					<p style="font-size: 0.8em">
+						<a href="https://twitter.com/teknik_tdr"><i class="fa fa-twitter" aria-hidden="true"></i>&nbsp;@teknik_tdr</a><br>
+						<a href="https://xrubio.com"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;https://xrubio.com</a><br>
+						<a href="https://github.com/xrubioj/"><i class="fa fa-github" aria-hidden="true"></i>&nbsp;https://github.com/xrubioj/</a>
+					</p>
+				</section>
+
+				<section>
+					<h1>What?</h1>
+					<ul>
+						<li class="fragment">Controls that don't exist in Android</li>
+						<li class="fragment">Compound Controls ("Group of <code>Views</code>")</li>
+						<li class="fragment">Customization of controls</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>When?</h1>
+					<ul>
+						<li class="fragment">No similar control exists</li>
+						<li class="fragment">Same groups of controls repeats</li>
+						<li class="fragment">Theming is not enough</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Benefits</h1>
+					<ul>
+						<li class="fragment">Encapsulate and simplify common controls</li>
+						<li class="fragment">Create a design language</li>
+						<li class="fragment">Simplify maintenance</li>
+					</ul>
+				</section>
+
+				<!-- Compound controls -->
+
+				<section>
+					<h1 style="font-size: 2.3em">Compound Controls</h1>
+					<ol>
+						<li class="fragment">Extend a <code>ViewGroup</code> (e.g. <code>LinearLayout</code>, <code>ConstraintLayout</code>...)</li>
+						<li class="fragment">Inflate the layout and attach it</li>
+						<li class="fragment">...</li>
+						<li class="fragment">Profit!</li>
+					</ol>
+				</section>
+
+				<section>
+					<h1 style="font-size: 1.6em">Compound Controls - Class</h1>
+					<pre><code class="kotlin" data-trim data-noescape style="font-size: 0.92em">
+						class MyCompoundControlView @JvmOverloads constructor(
+						    context: Context?,
+						    attrs: AttributeSet? = null,
+						    defStyleAttr: Int = 0,
+						    defStyleRes: Int = 0
+						) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+
+						    init {
+						        View.inflate(context, R.layout.my_compount_control_layout,
+						        			 this)
+						    }
+						}
+					</code></pre>
+				</section>
+
+				<section>
+					<h1 style="font-size: 1.6em">Compound Controls - Layout</h1>
+					<pre><code class="xml" data-trim data-noescape style="font-size: 0.82em; max-height: 560px">
+						&lt;?xml version="1.0" encoding="utf-8"?&gt;
+						&lt;LinearLayout
+						    xmlns:android="http://schemas.android.com/apk/res/android"
+						    android:orientation="vertical"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"&gt;
+						    &lt;TextView
+						        android:id="@+id/title"
+						        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+						        android:text="Title"
+						        android:layout_width="wrap_content"
+						        android:layout_height="wrap_content"/&gt;
+						    &lt;TextView
+						        android:id="@+id/subtitle"
+						        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+						        android:text="Subtitle"
+						        android:layout_width="wrap_content"
+						        android:layout_height="wrap_content"/&gt;
+						&lt;/LinearLayout&gt;
+					</code></pre>
+				</section>
+
+				<section>
+					<h1 style="font-size: 1.6em">Compound Controls - Result</h1>
+					<img style="border: 0" src="img/compount_control_bad_layout.png">
+				</section>
+
+				<section>
+					<h1 style="font-size: 1.6em">Compound Controls - Layout (better)</h1>
+					<pre><code class="xml" data-trim data-noescape style="font-size: 0.82em; max-height: 560px">
+						&lt;?xml version="1.0" encoding="utf-8"?&gt;
+						&lt;merge
+						    xmlns:android="http://schemas.android.com/apk/res/android"
+						    xmlns:tool="http://schemas.android.com/tools"
+						    tool:parentTag="android.widget.LinearLayout"
+						    tool:orientation="vertical"
+						    tool:layout_width="wrap_content"
+						    tool:layout_height="wrap_content"&gt;
+						    &lt;TextView .../&gt;
+						    &lt;TextView .../&gt;
+						&lt;/merge&gt;
+					</code></pre>
+					<small class="fragment">Notice <code>&lt;merge&gt;</code> and <code>tool</code></small>
+				</section>
+
+				<section>
+					<h1 style="font-size: 1.6em">Compound Controls - Updated class</h1>
+					<pre><code class="kotlin" data-trim data-noescape style="font-size: 0.92em">
+						class MyCompoundControlView @JvmOverloads constructor(
+						    context: Context?,
+						    attrs: AttributeSet? = null,
+						    defStyleAttr: Int = 0,
+						    defStyleRes: Int = 0
+						) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
+
+						    init {
+						        View.inflate(context, R.layout.my_compount_control_layout,
+						                     this)
+						        this.orientation = VERTICAL
+						    }
+						}
+					</code></pre>
+					<small class="fragment">Initialization of root tag moved here</small>
+				</section>
+
+				<section>
+					<h1 style="font-size: 1.6em">Compound Controls - Result</h1>
+					<img style="border: 0" src="img/compount_control_good_layout.png">
+				</section>
+
+				<!-- Fully customized controls -->
+
+				<!--
+					- Custom drawn controls
+						- Layouts vs View ("UI")
+						- Phases - Measure -> Layout -> Draw
+						- Paint creation and memory allocation (object creation) => not to be done in onDraw
+						- Invalidate => all
+
+				-->
+
+				<!-- References -->
+
+				<section>
+					<h1>References</h1>
+					<ul>
+						<li>
+							ref1
+							<a href="url1">
+							url1</a>
+						</li>
+						<li>
+							ref2
+							<a href="url2">url2</a>
+						</li>
+						<li>
+							ref3
+							<a href="url3">
+							url3</a>
+						</li>
+					</ul>
+				</section>
+
+				<!-- End -->
+
+				<section>
+					<h1>Questions? 🤔</h1>
+				</section>
+
+				<section>
+					<h1>Thanks! 🎉</h1>
+					<p>Xavier Rubio Jansana</p>
+					<p style="font-size: 0.8em">
+						<a href="https://twitter.com/teknik_tdr"><i class="fa fa-twitter" aria-hidden="true"></i>&nbsp;@teknik_tdr</a><br>
+						<a href="https://xrubio.com"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;https://xrubio.com</a><br>
+						<a href="https://github.com/xrubioj/"><i class="fa fa-github" aria-hidden="true"></i>&nbsp;https://github.com/xrubioj/</a>
+					</p>
+					<p style="line-height: 0.6em"><small>This talk is available at:</small><br>
+						<a href="https://xrubio.com/talks/xxx/" style="font-size: 0.6em">
+						https://xrubio.com/talks/xxx/</a>
+					</p>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="reveal.js/lib/js/head.min.js"></script>
+		<script src="reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'reveal.js/plugin/markdown/marked.js' },
+					{ src: 'reveal.js/plugin/markdown/markdown.js' },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
