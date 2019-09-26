@@ -205,6 +205,30 @@
 					<img style="border: 0" src="img/compount_control_good_layout.png">
 				</section>
 
+				<section>
+					<h1 style="font-size: 1.6em">Compound Controls - Using</h1>
+					<pre><code class="xml" data-trim data-noescape style="font-size: 0.82em; max-height: 560px">
+						&lt;?xml version="1.0" encoding="utf-8"?&gt;
+						&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+						    xmlns:app="http://schemas.android.com/apk/res-auto"
+						    xmlns:tools="http://schemas.android.com/tools"
+						    android:layout_width="match_parent"
+						    android:layout_height="match_parent"
+						    tools:context=".MainActivity">
+
+						    &lt;com.xrubio.customcontrols.MyCompoundControlView
+						        android:layout_width="wrap_content"
+						        android:layout_height="wrap_content"
+						        app:layout_constraintBottom_toBottomOf="parent"
+						        app:layout_constraintLeft_toLeftOf="parent"
+						        app:layout_constraintRight_toRightOf="parent"
+						        app:layout_constraintTop_toTopOf="parent" /&gt;
+
+						&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;
+					</code></pre>
+					<small>Notice we're using the fully qualified class name</small>
+				</section>
+
 				<!-- Fully customized controls -->
 
 				<!--
@@ -216,27 +240,128 @@
 
 				-->
 
+				<section>
+					<h1>UI Drawing Steps</h1>
+					<ol>
+						<li class="fragment" data-fragment-index="1">
+							Measure<span class="fragment" data-fragment-index="2">: calculate dimensions based in constraints</span>
+							<span class="fragment" data-fragment-index="7"><i class="fa fa-check" style="color: green"></i></span>
+						</li>
+						<li class="fragment" data-fragment-index="3">
+							Layout<span class="fragment" data-fragment-index="4">: layout children</span>
+							<span class="fragment" data-fragment-index="8">→ we don't need it</span>
+						</li>
+						<li class="fragment" data-fragment-index="5">
+							Draw<span class="fragment" data-fragment-index="6">: use <code>Canvas</code> to draw</span>
+							<span class="fragment" data-fragment-index="7"><i class="fa fa-check" style="color: green"></i></span>
+						</li>
+					</ol>
+				</section>
+
+				<section>
+					<h1>Measure</h1>
+					<pre><code class="kotlin" data-trim data-noescape>
+						val specMode: Int = MeasureSpec.getMode(measureSpec)
+						val specSize: Int = MeasureSpec.getSize(measureSpec)
+					</code></pre>
+					<small>We have a measureSpec per axis (X & Y)</small>
+					<p class="fragment" data-fragment-index="1">
+					<ul class="fragment" data-fragment-index="1">
+						<li>UNSPECIFIED</li>
+						<li>EXACTLY</li>
+						<li>AT_MOST</li>
+					</ul>
+					<!-- https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/view/View.java#24704 -->
+				</section>
+
+				<section>
+					<h1>Measure</h1>
+					<pre><code class="kotlin" data-trim data-noescape>
+						override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+						    val minW: Int = (paddingStart + paddingEnd + _radius * 2.0f).toInt()
+						    val w: Int = resolveSizeAndState(minW, widthMeasureSpec, 0)
+
+						    val minH: Int = (paddingTop + paddingBottom + _radius * 2.0f).toInt()
+						    val h: Int = resolveSizeAndState(minH, heightMeasureSpec, 0)
+
+						    setMeasuredDimension(w, h)
+						}
+					</code></pre>
+				</section>
+
+				<section>
+					<h1>Measure</h1>
+					<ul>
+						<li class="fragment">Units are <b>pixels</b></li>
+						<li class="fragment"><b>Must</b> call <code>setMeasuredDimension()</code></li>
+						<li class="fragment">Use <code>resolveSizeAndState(size, measureSpec, childMeasuredState)</code> as helper</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Canvas</h1>
+					<ul>
+						<li class="fragment">Units are <b>pixels</b></li>
+						<li class="fragment">Top-left is (0, 0)</li>
+						<li class="fragment">Draws in order ("on top of")</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Canvas vs. Paint</h1>
+					<ul>
+						<li class="fragment">Canvas is where things are drawn</li>
+						<li class="fragment">Paint is how things are drawn</li>
+						<li class="fragment">Canvas can get a backing Bitmap</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Canvas commands</h1>
+					<ul>
+						<li class="fragment">drawBitmap()</li>
+						<li class="fragment">drawRect(), drawCircle(), etc.</li>
+						<li class="fragment">drawColor()</li>
+						<li class="fragment">drawText()</li>
+						<li class="fragment">clip*()</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Canvas and KTX</h1>
+					<pre class="fragment"><code class="gradle" data-trim data-noescape>
+						implementation 'androidx.core:core-ktx:1.1.0'
+					</code></pre>
+					<ul>
+						<li class="fragment">Helps cleanup code (avoiding save() and restore(), for instance)</li>
+						<li class="fragment"><code>withClip()</code>, <code>withMatrix()</code>, <code>withRotation</code>, etc.</li>
+						<li class="fragment">See: <small><a href="https://developer.android.com/reference/kotlin/androidx/core/graphics/package-summary">
+						https://developer.android.com/reference/kotlin/androidx/core/graphics/package-summary</a></small></li>
+					</ul>
+				</section>
+
 				<!-- References -->
 
 				<section>
 					<h1>References</h1>
 					<ul>
 						<li>
-							ref1
-							<a href="url1">
-							url1</a>
+							Custom View Components at developer.android.com
+							<a href="https://developer.android.com/guide/topics/ui/custom-components">https://developer.android.com/guide/topics/ui/custom-components</a>
 						</li>
 						<li>
-							ref2
-							<a href="url2">url2</a>
+							"Tips for Building Custom Views on Android with Canvas APIs" slides, Rebecca Franks
+							<a href="https://speakerdeck.com/riggaroo/tips-for-building-custom-views-on-android-with-canvas-apis">
+							https://speakerdeck.com/riggaroo/tips-for-building-custom-views-on-android-with-canvas-apis</a>
 						</li>
 						<li>
-							ref3
-							<a href="url3">
-							url3</a>
-						</li>
+							Android Canvas APIs with Kotlin and KTX
+							<a href="https://riggaroo.co.za/android-canvas-apis-with-kotlin-and-ktx/">
+							https://riggaroo.co.za/android-canvas-apis-with-kotlin-and-ktx/</a></li>
 					</ul>
 				</section>
+
+				<!-- https://stackoverflow.com/questions/13650903/whats-the-utility-of-the-third-argument-of-view-resolvesizeandstate -->
 
 				<!-- End -->
 
@@ -253,8 +378,8 @@
 						<a href="https://github.com/xrubioj/"><i class="fa fa-github" aria-hidden="true"></i>&nbsp;https://github.com/xrubioj/</a>
 					</p>
 					<p style="line-height: 0.6em"><small>This talk is available at:</small><br>
-						<a href="https://xrubio.com/talks/xxx/" style="font-size: 0.6em">
-						https://xrubio.com/talks/xxx/</a>
+						<a href="https://xrubio.com/talks/" style="font-size: 0.6em">
+						https://xrubio.com/talks/</a>
 					</p>
 				</section>
 
