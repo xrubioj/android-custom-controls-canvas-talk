@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyCustomControlView">
+        <attr name="centered" format="boolean"/>
+        <attr name="color" format="color"/>
+        <attr name="disabledColor" format="color"/>
+        <!-- Not really used in this example, but shows how to use standard Android
+             attributes (notice "android:") -->
+        <attr name="android:orientation"/>
+        <attr name="radius" format="dimension"/>
+    </declare-styleable>
+
+    <!-- Default values for MyCustomControlView -->
+    <bool name="default_my_custom_control_view_centered">true</bool>
+    <color name="default_my_custom_control_view_color">#ff2222</color>
+    <color name="default_my_custom_control_view_disabled_color">#ffaaaaaa</color>
+    <integer name="default_my_custom_control_view_orientation">0</integer>
+    <dimen name="default_my_custom_control_view_radius">30dp</dimen>
+</resources>
