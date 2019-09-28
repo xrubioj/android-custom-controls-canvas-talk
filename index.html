@@ -231,15 +231,6 @@
 
 				<!-- Fully customized controls -->
 
-				<!--
-					- Custom drawn controls
-						- Layouts vs View ("UI")
-						- Phases - Measure -> Layout -> Draw
-						- Paint creation and memory allocation (object creation) => not to be done in onDraw
-						- Invalidate => all
-
-				-->
-
 				<section>
 					<h1>UI Drawing Steps</h1>
 					<ol>
@@ -271,7 +262,6 @@
 						<li>EXACTLY</li>
 						<li>AT_MOST</li>
 					</ul>
-					<!-- https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/view/View.java#24704 -->
 				</section>
 
 				<section>
@@ -328,6 +318,15 @@
 				</section>
 
 				<section>
+					<h1>Properties</h1>
+					<p>After changind a property, we need to either invalidate or relayout:</p>
+					<ul>
+						<li class="fragment"><code>invalidate()</code>: triggers a redraw. Use when property doesn't changes size.</li>
+						<li class="fragment"><code>requestLayout()</code>: triggers the whole cycle (measure, layout, draw). Use when property changes size.</li>
+					</ul>
+				</section>
+
+				<section>
 					<h1>Canvas and KTX</h1>
 					<pre class="fragment"><code class="gradle" data-trim data-noescape>
 						implementation 'androidx.core:core-ktx:1.1.0'
@@ -357,11 +356,29 @@
 						<li>
 							Android Canvas APIs with Kotlin and KTX
 							<a href="https://riggaroo.co.za/android-canvas-apis-with-kotlin-and-ktx/">
-							https://riggaroo.co.za/android-canvas-apis-with-kotlin-and-ktx/</a></li>
+							https://riggaroo.co.za/android-canvas-apis-with-kotlin-and-ktx/</a>
+						</li>
 					</ul>
 				</section>
 
-				<!-- https://stackoverflow.com/questions/13650903/whats-the-utility-of-the-third-argument-of-view-resolvesizeandstate -->
+				<section>
+					<h1>Other References</h1>
+					<ul style="font-size: 0.8em">
+						<li>
+							Source code of<br><code>View#resolveSizeAndState(int, int, int)</code> in AOSP
+							<a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/view/View.java#24704">
+								https://android.googlesource.com/platform/frameworks/base/+/<br>refs/heads/master/core/java/android/view/View.java#24704
+							</a>
+						</li>
+						<li>
+							What's the utility of the third argument of View.resolveSizeAndState()?
+							<a href="https://stackoverflow.com/questions/13650903/whats-the-utility-of-the-third-argument-of-view-resolvesizeandstate/13651513#13651513">
+								https://stackoverflow.com/questions/13650903/<br>whats-the-utility-of-the-third-argument-of-view-resolvesizeandstate/<13651513#13651513
+							</a>
+						</li>
+					</ul>
+
+				</section>
 
 				<!-- End -->
 
